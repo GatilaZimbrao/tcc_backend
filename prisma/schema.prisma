@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String
+  name     String?
+  // posts    Post[]
+
+  @@map("user")
+}
+
+model File {
+  id            Int     @id @default(autoincrement())
+  name          String
+  type          String
+  file_name     String
+  
+  @@map("file")
+}
+
+model Education {
+  id    Int     @id @default(autoincrement())
+  title String
+  file  String?
+
+  @@map("education")
+}
+
+// model Post {
+//   id        Int     @id @default(autoincrement())
+//   title     String
+//   content   String?
+//   published Boolean @default(false)
+//   author    User    @relation(fields: [authorId], references: [id])
+//   authorId  Int
+
+//   @@map("post")
+// }
