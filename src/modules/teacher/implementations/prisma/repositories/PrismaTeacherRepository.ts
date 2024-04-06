@@ -57,4 +57,14 @@ export class PrismaTeacherRepository implements TeacherRepository {
     });
     return newTeacher;
   }
+
+  async update(teacher: Teacher): Promise<Teacher | null> {
+    const newTeacher = await this.prisma.teacher.update({
+      where: {
+        id: teacher.id,
+      },
+      data: teacher,
+    });
+    return newTeacher;
+  }
 }
