@@ -43,7 +43,6 @@ export class CreateFileService {
     return await this.repository.create({
       id: file.id,
       name: file.name,
-      type: file.type,
       file_name: file.file_name,
     });
   }

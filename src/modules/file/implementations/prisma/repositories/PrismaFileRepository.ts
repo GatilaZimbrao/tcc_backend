@@ -49,7 +49,6 @@ export class PrismaFileRepository implements FileRepository {
     const newFile = await this.prisma.file.create({
       data: {
         name: file.name,
-        type: file.type,
         file_name: file.file_name,
       },
     });

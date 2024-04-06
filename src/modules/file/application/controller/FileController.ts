@@ -17,12 +17,12 @@ import path from "path";
 
 export class FileController {
   async create(req: Request, res: Response): Promise<void> {
-    const { name, type } = req.body;
+    const { name } = req.body;
 
     let file_name = "";
     let uploadedFile: UploadedFile | undefined;
 
-    if (!name || !type) {
+    if (!name) {
       throw new FileError(FileErrorStatus.MISSING_PARAMS);
     }
 
@@ -45,7 +45,6 @@ export class FileController {
       {
         id: 0,
         name: name,
-        type: type,
         file_name: file_name,
       },
       uploadedFile
@@ -54,14 +53,8 @@ export class FileController {
     res.status(201).json({
       id: file?.id,
       name: file?.name,
-      type: file?.type,
       file_name: file?.file_name,
     });
-
-    // return res.json({
-    //   status: "success",
-    //   message: Object.keys(files).toString(),
-    // });
   }
 
   async delete(req: Request, res: Response): Promise<void> {

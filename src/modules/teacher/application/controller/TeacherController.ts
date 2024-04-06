@@ -12,6 +12,7 @@ import { CreateTeacherService } from "../services/CreateTeacherService";
 import { DeleteTeacherService } from "../services/DeleteTeacherService";
 import { ListTeacherService } from "../services/ListTeacherService";
 import { FindByIdTeacherService } from "../services/FindByIdTeacherService";
+import { UpdateTeacherService } from "../services/UpdateTeacherService";
 
 export class TeacherController {
   async create(req: Request, res: Response): Promise<void> {
@@ -33,6 +34,29 @@ export class TeacherController {
     });
 
     res.status(201).json(teacher);
+  }
+
+  async update(req: Request, res: Response): Promise<void> {
+    const { id } = req.params;
+
+    const { name, image, education, linkLattes, type } = req.body;
+
+    if (!id || !name || !education || !image || !linkLattes || !type) {
+      throw new TeacherError(TeacherErrorStatus.MISSING_PARAMS);
+    }
+
+    const updateService = container.resolve(UpdateTeacherService);
+
+    const teacher = await updateService.execute({
+      id: parseInt(id),
+      name: name,
+      image: image,
+      education: education,
+      linkLattes: linkLattes,
+      type: type,
+    });
+
+    res.status(200).json(teacher);
   }
 
   async delete(req: Request, res: Response): Promise<void> {

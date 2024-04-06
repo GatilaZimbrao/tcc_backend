@@ -6,4 +6,5 @@ export interface TeacherRepository {
   findByName(name: string): Promise<Teacher | null>;
   delete(id: number): Promise<null>;
   create(teacher: Teacher): Promise<Teacher | null>;
+  update(teacher: Teacher): Promise<Teacher | null>;
 }
