@@ -5,12 +5,15 @@ import { filesExtLimiter } from "../middlewares/filesExtLimiter";
 import { filesSizeLimiter } from "../middlewares/filesSizeLimiter";
 import { filesPayloadExists } from "../middlewares/filesPayloadExists";
 import { FILE_ALLOWED_EXT } from "../config/config";
+import { VerifySession } from "@shared/middlewares/VerifySession";
 
 const fileRouter = Router();
 const controller = new FileController();
 
+fileRouter.use(VerifySession);
+
 fileRouter.post(
-  "/create",
+  "/",
   fileUpload({ createParentPath: true }),
   filesPayloadExists,
   filesExtLimiter(FILE_ALLOWED_EXT),
@@ -18,8 +21,8 @@ fileRouter.post(
   controller.create
 );
 
-fileRouter.delete("/delete/:id", controller.delete);
-fileRouter.get("/find/:id", controller.findById);
-fileRouter.get("/list", controller.list);
+fileRouter.delete("/:id", controller.delete);
+fileRouter.get("/:id", controller.findById);
+fileRouter.get("/", controller.list);
 
 export { fileRouter };

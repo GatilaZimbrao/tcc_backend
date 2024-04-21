@@ -9,8 +9,8 @@
     "paths": {
       "modules/*": ["modules/*"],
       "@config/*": ["config/*"],
-      "@shared/*": ["shared/*"]
-      // "typings/*": ["typings/*"]
+      "@shared/*": ["shared/*"],
+      "typings/*": ["typings/*"]
     },
     "esModuleInterop": true,
     "experimentalDecorators": true,
@@ -21,5 +21,8 @@
     "strict": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": false
-  }
+  },
+
+  "include": ["src/**/*.ts"],
+  "files": ["./src/typings/custom.d.ts"]
 }

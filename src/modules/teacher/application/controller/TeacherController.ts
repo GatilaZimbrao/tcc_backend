@@ -13,6 +13,7 @@ import { DeleteTeacherService } from "../services/DeleteTeacherService";
 import { ListTeacherService } from "../services/ListTeacherService";
 import { FindByIdTeacherService } from "../services/FindByIdTeacherService";
 import { UpdateTeacherService } from "../services/UpdateTeacherService";
+import { SearchTeacherService } from "../services/SearchTeacherService";
 
 export class TeacherController {
   async create(req: Request, res: Response): Promise<void> {
@@ -72,9 +73,16 @@ export class TeacherController {
   }
 
   async list(req: Request, res: Response): Promise<void> {
-    const listService = container.resolve(ListTeacherService);
-    const teacherList = await listService.execute();
-    res.status(200).json(teacherList);
+    const { term } = req.query;
+    if (term && typeof term == "string") {
+      const searchService = container.resolve(SearchTeacherService);
+      const teacherList = await searchService.execute(term);
+      res.status(200).json(teacherList);
+    } else {
+      const listService = container.resolve(ListTeacherService);
+      const teacherList = await listService.execute();
+      res.status(200).json(teacherList);
+    }
   }
 
   async findById(req: Request, res: Response): Promise<void> {

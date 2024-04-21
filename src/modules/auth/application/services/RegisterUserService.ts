@@ -1,9 +1,10 @@
 import { User } from "@prisma/client";
+import { UserRepository } from "modules/auth/domain/repositories/UserRepository";
 import {
   AuthError,
   AuthErrorStatus,
 } from "modules/auth/shared/error/AuthError";
-import { UserRepository } from "modules/user/domain/repositories/UserRepository";
+
 import { IBcrypt } from "providers/bcrypt/bcrypt";
 
 import { inject, injectable } from "tsyringe";
@@ -31,6 +32,7 @@ export class RegisterUserService {
       email: user.email,
       name: user.name,
       password: passwordHash,
+      role: user.role,
     });
   }
 }

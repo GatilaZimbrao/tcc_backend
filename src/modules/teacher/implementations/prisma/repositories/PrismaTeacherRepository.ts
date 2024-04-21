@@ -1,4 +1,5 @@
 import { Teacher, PrismaClient } from "@prisma/client";
+
 import { TeacherRepository } from "modules/teacher/domain/repositories/TeacherRepository";
 import { inject, injectable } from "tsyringe";
 
@@ -10,9 +11,28 @@ export class PrismaTeacherRepository implements TeacherRepository {
   ) {}
 
   async list(): Promise<Teacher[] | null> {
-    const teacher = await this.prisma.teacher.findMany({});
+    const teacher = await this.prisma.teacher.findMany({
+      orderBy: {
+        type: "desc",
+      },
+    });
 
     return teacher;
+  }
+
+  async search(term: string): Promise<Teacher[] | null> {
+    const teachers = await this.prisma.teacher.findMany({
+      where: {
+        name: {
+          contains: term,
+        },
+      },
+      orderBy: {
+        type: "desc",
+      },
+    });
+
+    return teachers;
   }
 
   async findById(id: number): Promise<Teacher | null> {

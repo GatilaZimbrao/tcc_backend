@@ -10,9 +10,21 @@ export class PrismaFileRepository implements FileRepository {
   ) {}
 
   async list(): Promise<File[] | null> {
-    const file = await this.prisma.file.findMany({});
+    const files = await this.prisma.file.findMany({});
 
-    return file;
+    return files;
+  }
+
+  async search(term: string): Promise<File[] | null> {
+    const files = await this.prisma.file.findMany({
+      where: {
+        name: {
+          contains: term,
+        },
+      },
+    });
+
+    return files;
   }
 
   async findById(id: number): Promise<File | null> {

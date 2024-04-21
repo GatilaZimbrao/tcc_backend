@@ -1,8 +1,11 @@
 import { Router } from "express";
 import { TeacherController } from "../application/controller/TeacherController";
+import { VerifySession } from "@shared/middlewares/VerifySession";
 
 const teacherRouter = Router();
 const controller = new TeacherController();
+
+teacherRouter.use(VerifySession);
 
 teacherRouter.post("/", controller.create);
 teacherRouter.put("/:id", controller.update);

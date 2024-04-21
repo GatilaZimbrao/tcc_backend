@@ -14,6 +14,7 @@ import { ListFileService } from "../services/ListFileService";
 import { FindByIdFileService } from "../services/FindByIdFileService";
 import { FileArray, UploadedFile } from "express-fileupload";
 import path from "path";
+import { SearchFileService } from "../services/SearchFileService";
 
 export class FileController {
   async create(req: Request, res: Response): Promise<void> {
@@ -74,11 +75,16 @@ export class FileController {
   }
 
   async list(req: Request, res: Response): Promise<void> {
-    const listService = container.resolve(ListFileService);
-
-    const fileList = await listService.execute();
-
-    res.status(200).json(fileList);
+    const { term } = req.query;
+    if (term && typeof term == "string") {
+      const searchService = container.resolve(SearchFileService);
+      const fileList = await searchService.execute(term);
+      res.status(200).json(fileList);
+    } else {
+      const listService = container.resolve(ListFileService);
+      const fileList = await listService.execute();
+      res.status(200).json(fileList);
+    }
   }
 
   async findById(req: Request, res: Response): Promise<void> {

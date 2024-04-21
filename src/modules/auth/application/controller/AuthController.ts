@@ -12,6 +12,7 @@ import {
 } from "modules/auth/shared/error/AuthError";
 
 import { SessionUserService } from "../services/SessionUserService";
+import { ROLES } from "modules/auth/domain/models/RoleModel";
 
 export class AuthController {
   async login(req: Request, res: Response): Promise<void> {
@@ -50,12 +51,14 @@ export class AuthController {
       email: email,
       name: name,
       password: password,
+      role: ROLES.user,
     });
 
     res.status(201).json({
       id: user?.id,
       email: user?.email,
       name: user?.name,
+      role: user?.role,
     });
   }
 

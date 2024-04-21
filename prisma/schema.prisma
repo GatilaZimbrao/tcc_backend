@@ -11,11 +11,11 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
   password String
+  role     String   @default("user")
   name     String?
-  // posts    Post[]
 
   @@map("user")
 }
@@ -27,7 +27,9 @@ model Teacher {
   image         String  
   education     String  
   linkLattes    String 
-  type          String   
+  type          String
+  extensions    Extension[] 
+   
   
   @@map("teacher")
 }
@@ -41,13 +43,26 @@ model File {
   @@map("file")
 }
 
-// model Post {
-//   id        Int     @id @default(autoincrement())
-//   title     String
-//   content   String?
-//   published Boolean @default(false)
-//   author    User    @relation(fields: [authorId], references: [id])
-//   authorId  Int
+model Contact {
+  id            Int     @id @default(autoincrement())
+  name          String
+  tel           String
+  email         String
+  
+  @@map("contact")
+}
 
-//   @@map("post")
-// }
+model Extension {
+  id            Int     @id @default(autoincrement())
+  name          String  
+  abstract      String  
+  email         String 
+  site          String? 
+  type          String   
+  teacher       Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacherId     Int
+  
+  @@map("extension")
+}
+
+

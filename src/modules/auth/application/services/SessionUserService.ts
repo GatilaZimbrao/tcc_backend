@@ -1,14 +1,13 @@
 import { User } from "@prisma/client";
-import authConfig from "@shared/config/auth";
 
 import {
   AuthError,
   AuthErrorStatus,
 } from "modules/auth/shared/error/AuthError";
-import { UserRepository } from "modules/user/domain/repositories/UserRepository";
 
 import { container, inject, injectable } from "tsyringe";
 import { DecodeTokensService } from "./DecodeTokensService";
+import { UserRepository } from "modules/auth/domain/repositories/UserRepository";
 
 @injectable()
 export class SessionUserService {
@@ -38,17 +37,5 @@ export class SessionUserService {
     } else {
       throw new AuthError(AuthErrorStatus.NO_TOKEN_PROVIDED);
     }
-
-    // const userAlreadyExists = await this.repository.findByEmail(user.email);
-    // if (userAlreadyExists) {
-    //   throw new AuthError(AuthErrorStatus.USER_ALREADY_EXISTS);
-    // }
-    // const passwordHash = await this.bcrypt.hash(user.password);
-    // return await this.repository.create({
-    //   id: user.id,
-    //   email: user.email,
-    //   name: user.name,
-    //   password: passwordHash,
-    // });
   }
 }
