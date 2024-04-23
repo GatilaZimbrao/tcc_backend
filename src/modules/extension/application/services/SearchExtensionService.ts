@@ -1,4 +1,5 @@
 import { Extension } from "@prisma/client";
+import { ExtensionType } from "modules/extension/domain/models/ExtensionTypeModel";
 import { ExtensionRepository } from "modules/extension/domain/repositories/ExtensionRepository";
 
 import { inject, injectable } from "tsyringe";
@@ -10,7 +11,10 @@ export class SearchExtensionService {
     private repository: ExtensionRepository
   ) {}
 
-  public async execute(term: string): Promise<Extension[] | null> {
-    return await this.repository.search(term);
+  public async execute(
+    extensionType: ExtensionType,
+    term: string
+  ): Promise<Extension[] | null> {
+    return await this.repository.search(extensionType, term);
   }
 }

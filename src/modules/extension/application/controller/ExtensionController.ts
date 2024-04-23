@@ -14,13 +14,16 @@ import { ListExtensionService } from "../services/ListExtensionService";
 import { FindByIdExtensionService } from "../services/FindByIdExtensionService";
 import { UpdateExtensionService } from "../services/UpdateExtensionService";
 import { SearchExtensionService } from "../services/SearchExtensionService";
-import { EXTENSION_TYPE } from "modules/extension/domain/models/ExtensionTypeModel";
+import {
+  EXTENSION_TYPE,
+  ExtensionType,
+} from "modules/extension/domain/models/ExtensionTypeModel";
 
 export class ExtensionController {
   async create(req: Request, res: Response): Promise<void> {
     const { name, abstract, email, site, type, teacherId } = req.body;
 
-    if (!name || !abstract || !email || !site || !type || !teacherId) {
+    if (!name || !abstract || !email || !type || !teacherId) {
       throw new ExtensionError(ExtensionErrorStatus.MISSING_PARAMS);
     }
 
@@ -35,7 +38,7 @@ export class ExtensionController {
       name: name,
       abstract: abstract,
       email: email,
-      site: site,
+      site: site !== undefined ? site : null,
       type: type,
       teacherId: teacherId,
     });
@@ -48,7 +51,7 @@ export class ExtensionController {
 
     const { name, abstract, email, site, type, teacherId } = req.body;
 
-    if (!id || !name || !abstract || !email || !site || !type || !teacherId) {
+    if (!id || !name || !abstract || !email || !type || !teacherId) {
       throw new ExtensionError(ExtensionErrorStatus.MISSING_PARAMS);
     }
 
@@ -59,7 +62,7 @@ export class ExtensionController {
       name: name,
       abstract: abstract,
       email: email,
-      site: site,
+      site: site !== undefined ? site : null,
       type: type,
       teacherId: teacherId,
     });
@@ -80,14 +83,27 @@ export class ExtensionController {
   }
 
   async list(req: Request, res: Response): Promise<void> {
+    const { type } = req.query;
+
+    if (!type) {
+      throw new ExtensionError(ExtensionErrorStatus.MISSING_PARAMS);
+    }
+
+    if (!(typeof type == "string") || !(type in EXTENSION_TYPE)) {
+      throw new ExtensionError(ExtensionErrorStatus.EXTENSION_TYPE_INVALID);
+    }
+
     const { term } = req.query;
     if (term && typeof term == "string") {
       const searchService = container.resolve(SearchExtensionService);
-      const extensionList = await searchService.execute(term);
+      const extensionList = await searchService.execute(
+        type as ExtensionType,
+        term
+      );
       res.status(200).json(extensionList);
     } else {
       const listService = container.resolve(ListExtensionService);
-      const extensionList = await listService.execute();
+      const extensionList = await listService.execute(type as ExtensionType);
       res.status(200).json(extensionList);
     }
   }

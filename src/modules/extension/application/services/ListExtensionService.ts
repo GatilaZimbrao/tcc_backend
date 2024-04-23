@@ -1,4 +1,5 @@
 import { Extension } from "@prisma/client";
+import { ExtensionType } from "modules/extension/domain/models/ExtensionTypeModel";
 import { ExtensionRepository } from "modules/extension/domain/repositories/ExtensionRepository";
 
 import { inject, injectable } from "tsyringe";
@@ -10,7 +11,9 @@ export class ListExtensionService {
     private repository: ExtensionRepository
   ) {}
 
-  public async execute(): Promise<Extension[] | null> {
-    return await this.repository.list();
+  public async execute(
+    extensionType: ExtensionType
+  ): Promise<Extension[] | null> {
+    return await this.repository.list(extensionType);
   }
 }

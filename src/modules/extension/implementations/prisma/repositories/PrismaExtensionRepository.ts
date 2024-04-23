@@ -1,4 +1,5 @@
 import { Extension, PrismaClient } from "@prisma/client";
+import { ExtensionType } from "modules/extension/domain/models/ExtensionTypeModel";
 import { ExtensionRepository } from "modules/extension/domain/repositories/ExtensionRepository";
 
 import { inject, injectable } from "tsyringe";
@@ -10,25 +11,42 @@ export class PrismaExtensionRepository implements ExtensionRepository {
     private prisma: PrismaClient
   ) {}
 
-  async list(): Promise<Extension[] | null> {
+  async list(extensionType: ExtensionType): Promise<Extension[] | null> {
     const extension = await this.prisma.extension.findMany({
+      where: {
+        type: {
+          equals: extensionType,
+        },
+      },
       orderBy: {
         type: "desc",
+      },
+      include: {
+        teacher: true,
       },
     });
 
     return extension;
   }
 
-  async search(term: string): Promise<Extension[] | null> {
+  async search(
+    extensionType: ExtensionType,
+    term: string
+  ): Promise<Extension[] | null> {
     const extensions = await this.prisma.extension.findMany({
       where: {
         name: {
           contains: term,
         },
+        type: {
+          equals: extensionType,
+        },
       },
       orderBy: {
         type: "desc",
+      },
+      include: {
+        teacher: true,
       },
     });
 
