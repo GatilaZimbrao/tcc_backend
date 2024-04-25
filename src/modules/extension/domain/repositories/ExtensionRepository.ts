@@ -8,7 +8,10 @@ export interface ExtensionRepository {
     term: string
   ): Promise<Extension[] | null>;
   findById(id: number): Promise<Extension | null>;
-  findByName(name: string): Promise<Extension | null>;
+  findByName(
+    name: string,
+    extensionType: ExtensionType
+  ): Promise<Extension | null>;
   delete(id: number): Promise<null>;
   create(teacher: Extension): Promise<Extension | null>;
   update(teacher: Extension): Promise<Extension | null>;

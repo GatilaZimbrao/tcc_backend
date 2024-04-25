@@ -1,4 +1,8 @@
 import { Extension } from "@prisma/client";
+import {
+  EXTENSION_TYPE,
+  ExtensionType,
+} from "modules/extension/domain/models/ExtensionTypeModel";
 import { ExtensionRepository } from "modules/extension/domain/repositories/ExtensionRepository";
 import {
   ExtensionError,
@@ -21,7 +25,17 @@ export class UpdateExtensionService {
       throw new ExtensionError(ExtensionErrorStatus.EXTENSION_DONT_EXISTS);
     }
 
-    const extensionByName = await this.repository.findByName(extension.name);
+    if (
+      !(typeof extension.type == "string") ||
+      !(extension.type in EXTENSION_TYPE)
+    ) {
+      throw new ExtensionError(ExtensionErrorStatus.EXTENSION_TYPE_INVALID);
+    }
+
+    const extensionByName = await this.repository.findByName(
+      extension.name,
+      extension.type as ExtensionType
+    );
 
     if (extensionByName && extensionByName.id != extension.id) {
       throw new ExtensionError(ExtensionErrorStatus.EXTENSION_ALREADY_EXISTS);

@@ -58,15 +58,29 @@ export class PrismaExtensionRepository implements ExtensionRepository {
       where: {
         id: id,
       },
+
+      include: {
+        teacher: true,
+      },
     });
 
     return extension;
   }
 
-  async findByName(name: string): Promise<Extension | null> {
+  async findByName(
+    name: string,
+    extensionType: ExtensionType
+  ): Promise<Extension | null> {
     const extension = await this.prisma.extension.findFirst({
       where: {
         name: name,
+        type: {
+          equals: extensionType,
+        },
+      },
+
+      include: {
+        teacher: true,
       },
     });
 
@@ -98,7 +112,12 @@ export class PrismaExtensionRepository implements ExtensionRepository {
           },
         },
       },
+
+      include: {
+        teacher: true,
+      },
     });
+
     return newExtension;
   }
 
@@ -108,6 +127,10 @@ export class PrismaExtensionRepository implements ExtensionRepository {
         id: extension.id,
       },
       data: extension,
+
+      include: {
+        teacher: true,
+      },
     });
     return newExtension;
   }
