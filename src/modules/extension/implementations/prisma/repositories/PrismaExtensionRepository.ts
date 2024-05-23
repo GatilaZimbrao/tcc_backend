@@ -1,7 +1,7 @@
 import { Extension, PrismaClient } from "@prisma/client";
 import { ExtensionType } from "modules/extension/domain/models/ExtensionTypeModel";
+import { ExtensionWithTeachers } from "modules/extension/domain/models/ExtensionWithTeachers";
 import { ExtensionRepository } from "modules/extension/domain/repositories/ExtensionRepository";
-
 import { inject, injectable } from "tsyringe";
 
 @injectable()
@@ -12,7 +12,7 @@ export class PrismaExtensionRepository implements ExtensionRepository {
   ) {}
 
   async list(extensionType: ExtensionType): Promise<Extension[] | null> {
-    const extension = await this.prisma.extension.findMany({
+    const extensions = await this.prisma.extension.findMany({
       where: {
         type: {
           equals: extensionType,
@@ -22,11 +22,15 @@ export class PrismaExtensionRepository implements ExtensionRepository {
         type: "desc",
       },
       include: {
-        teacher: true,
+        teachers: {
+          include: {
+            teacher: true,
+          },
+        },
       },
     });
 
-    return extension;
+    return extensions;
   }
 
   async search(
@@ -46,7 +50,11 @@ export class PrismaExtensionRepository implements ExtensionRepository {
         type: "desc",
       },
       include: {
-        teacher: true,
+        teachers: {
+          include: {
+            teacher: true,
+          },
+        },
       },
     });
 
@@ -58,9 +66,12 @@ export class PrismaExtensionRepository implements ExtensionRepository {
       where: {
         id: id,
       },
-
       include: {
-        teacher: true,
+        teachers: {
+          include: {
+            teacher: true,
+          },
+        },
       },
     });
 
@@ -78,9 +89,12 @@ export class PrismaExtensionRepository implements ExtensionRepository {
           equals: extensionType,
         },
       },
-
       include: {
-        teacher: true,
+        teachers: {
+          include: {
+            teacher: true,
+          },
+        },
       },
     });
 
@@ -97,7 +111,7 @@ export class PrismaExtensionRepository implements ExtensionRepository {
     return null;
   }
 
-  async create(extension: Extension): Promise<Extension | null> {
+  async create(extension: ExtensionWithTeachers): Promise<Extension | null> {
     const newExtension = await this.prisma.extension.create({
       data: {
         name: extension.name,
@@ -105,33 +119,61 @@ export class PrismaExtensionRepository implements ExtensionRepository {
         email: extension.email,
         site: extension.site,
         type: extension.type,
-
-        teacher: {
-          connect: {
-            id: extension.teacherId,
-          },
+        isActive: extension.isActive,
+        teachers: {
+          create: extension.teachers.map((teacher) => ({
+            teacher: {
+              connect: {
+                id: teacher.teacherId,
+              },
+            },
+          })),
         },
       },
-
       include: {
-        teacher: true,
+        teachers: {
+          include: {
+            teacher: true,
+          },
+        },
       },
     });
 
     return newExtension;
   }
 
-  async update(extension: Extension): Promise<Extension | null> {
-    const newExtension = await this.prisma.extension.update({
+  async update(extension: ExtensionWithTeachers): Promise<Extension | null> {
+    const updatedExtension = await this.prisma.extension.update({
       where: {
         id: extension.id,
       },
-      data: extension,
-
+      data: {
+        name: extension.name,
+        abstract: extension.abstract,
+        email: extension.email,
+        site: extension.site,
+        type: extension.type,
+        isActive: extension.isActive,
+        teachers: {
+          deleteMany: {},
+          create: extension.teachers.map((teacher) => ({
+            teacher: {
+              connect: {
+                id: teacher.teacherId,
+              },
+            },
+          })),
+        },
+      },
       include: {
-        teacher: true,
+        teachers: {
+          include: {
+            teacher: true,
+          },
+        },
       },
     });
-    return newExtension;
+
+    return updatedExtension;
   }
 }

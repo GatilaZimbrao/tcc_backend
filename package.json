@@ -7,6 +7,7 @@
     "dev": "ts-node-dev -r tsconfig-paths/register --inspect --ignore-watch node_modules --respawn ./src/server.ts",
     "start": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules --respawn ./src/server.ts | pino-pretty",
     "create:admin": "ts-node -T -r tsconfig-paths/register ./src/scripts/createAdminAccount.ts",
+    "create:initialPages": "ts-node -T -r tsconfig-paths/register ./src/scripts/createInitialPages.ts",
     "migrate": "npx prisma migrate dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -21,9 +21,17 @@ import {
 
 export class ExtensionController {
   async create(req: Request, res: Response): Promise<void> {
-    const { name, abstract, email, site, type, teacherId } = req.body;
+    const { name, abstract, email, site, type, isActive, teachers } = req.body;
 
-    if (!name || !abstract || !email || !type || !teacherId) {
+    if (
+      !name ||
+      !abstract ||
+      !email ||
+      !type ||
+      typeof isActive === "undefined" ||
+      !Array.isArray(teachers) ||
+      teachers.length === 0
+    ) {
       throw new ExtensionError(ExtensionErrorStatus.MISSING_PARAMS);
     }
 
@@ -38,9 +46,10 @@ export class ExtensionController {
       name: name,
       abstract: abstract,
       email: email,
+      isActive: isActive,
       site: site !== undefined ? site : null,
       type: type,
-      teacherId: teacherId,
+      teachers: teachers.map((teacherId: number) => ({ teacherId })),
     });
 
     res.status(201).json(extension);
@@ -49,9 +58,18 @@ export class ExtensionController {
   async update(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
-    const { name, abstract, email, site, type, teacherId } = req.body;
+    const { name, abstract, email, site, type, isActive, teachers } = req.body;
 
-    if (!id || !name || !abstract || !email || !type || !teacherId) {
+    if (
+      !id ||
+      !name ||
+      !abstract ||
+      !email ||
+      !type ||
+      typeof isActive === "undefined" ||
+      !Array.isArray(teachers) ||
+      teachers.length === 0
+    ) {
       throw new ExtensionError(ExtensionErrorStatus.MISSING_PARAMS);
     }
 
@@ -62,9 +80,10 @@ export class ExtensionController {
       name: name,
       abstract: abstract,
       email: email,
+      isActive: isActive,
       site: site !== undefined ? site : null,
       type: type,
-      teacherId: teacherId,
+      teachers: teachers.map((teacherId: number) => ({ teacherId })),
     });
 
     res.status(200).json(extension);

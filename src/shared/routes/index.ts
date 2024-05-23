@@ -4,6 +4,7 @@ import { authRouter } from "modules/auth/routes/AuthRouter";
 import { contactRouter } from "modules/contact/routes/ContactRouter";
 import { extensionRouter } from "modules/extension/routes/ExtensionRouter";
 import { fileRouter } from "modules/file/routes/FileRouter";
+import { pageRouter } from "modules/page/routes/PageRouter";
 import { teacherRouter } from "modules/teacher/routes/TeacherRouter";
 
 const router = Router();
@@ -18,5 +19,6 @@ router.use("/file", fileRouter);
 router.use("/teacher", teacherRouter);
 router.use("/contact", contactRouter);
 router.use("/extension", extensionRouter);
+router.use("/page", pageRouter);
 
 export { router };

@@ -5,5 +5,6 @@ import "modules/file/container";
 import "modules/teacher/container";
 import "modules/contact/container";
 import "modules/extension/container";
+import "modules/page/container";
 
 import "providers/container";
