@@ -4,6 +4,7 @@ export enum TeacherErrorStatus {
   MISSING_PARAMS,
   TEACHER_ALREADY_EXISTS,
   TEACHER_DONT_EXISTS,
+  TEACHER_TYPE_INVALID,
 }
 
 export const errorProps: Record<TeacherErrorStatus, AppErrorProps> = {
@@ -21,6 +22,14 @@ export const errorProps: Record<TeacherErrorStatus, AppErrorProps> = {
     statusCode: 400,
     message: "Docente não existente",
   },
+
+
+  [TeacherErrorStatus.TEACHER_TYPE_INVALID]: {
+    statusCode: 400,
+    message: "Tipo de docente inválido.",
+  },
+
+  
 };
 
 export class TeacherError extends AppError {

@@ -115,6 +115,7 @@ export class ExtensionController {
     const { term } = req.query;
     if (term && typeof term == "string") {
       const searchService = container.resolve(SearchExtensionService);
+      
       const extensionList = await searchService.execute(
         type as ExtensionType,
         term
@@ -136,6 +137,7 @@ export class ExtensionController {
       FindByIdExtensionService
     );
     const extension = await findByIdExtensionService.execute(Number(id));
+    
     if (!extension) {
       throw new ExtensionError(ExtensionErrorStatus.EXTENSION_DONT_EXISTS);
     }

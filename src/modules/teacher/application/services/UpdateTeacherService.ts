@@ -1,4 +1,5 @@
 import { Teacher } from "@prisma/client";
+import { TEACHER_TYPE } from "modules/teacher/domain/models/TeacherTypeModel";
 import { TeacherRepository } from "modules/teacher/domain/repositories/TeacherRepository";
 import {
   TeacherError,
@@ -19,6 +20,10 @@ export class UpdateTeacherService {
 
     if (!idIsValid) {
       throw new TeacherError(TeacherErrorStatus.TEACHER_DONT_EXISTS);
+    }
+
+    if (!(typeof teacher.type == "string") || !(teacher.type in TEACHER_TYPE)) {
+      throw new TeacherError(TeacherErrorStatus.TEACHER_ALREADY_EXISTS);
     }
 
     const teacherByName = await this.repository.findByName(teacher.name);

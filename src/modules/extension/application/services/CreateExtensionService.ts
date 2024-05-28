@@ -58,6 +58,12 @@ export class CreateExtensionService {
       }
     }
 
+    if (uniqueTeacherIds.size > 2) {
+      throw new ExtensionError(
+        ExtensionErrorStatus.EXTENSION_TOO_MANY_TEACHERS
+      );
+    }
+
     return await this.repository.create({
       id: extension.id,
       name: extension.name,

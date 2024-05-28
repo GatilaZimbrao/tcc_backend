@@ -7,6 +7,7 @@ export enum ExtensionErrorStatus {
   EXTENSION_DONT_EXISTS,
   EXTENSION_TEACHER_DONT_EXISTS,
   EXTENSION_DUPLICATE_TEACHER,
+  EXTENSION_TOO_MANY_TEACHERS,
 }
 
 export const errorProps: Record<ExtensionErrorStatus, AppErrorProps> = {
@@ -38,6 +39,11 @@ export const errorProps: Record<ExtensionErrorStatus, AppErrorProps> = {
   [ExtensionErrorStatus.EXTENSION_DUPLICATE_TEACHER]: {
     statusCode: 400,
     message: "o docente já foi passado",
+  },
+
+  [ExtensionErrorStatus.EXTENSION_TOO_MANY_TEACHERS]: {
+    statusCode: 400,
+    message: "Uma atividade pode ter até 2 docentes",
   },
 };
 
