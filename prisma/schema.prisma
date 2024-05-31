@@ -63,7 +63,8 @@ model Page {
   id                  Int     @id @default(autoincrement())
   pathName            String  
   title               String  
-  description         String?
+  description         String? @db.Text()
+  additionalParams    String? @db.Text()
   
   @@map("page")
 }

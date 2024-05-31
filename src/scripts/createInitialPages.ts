@@ -10,12 +10,14 @@ async function main() {
       pathName: "/",
       title: "CEFET",
       description: "",
+      additionalParams: "",
     },
     {
       pathName: "/documentos",
       title: "Documentos Institucionais",
       description:
         "Aqui você vai encontrar todos os documentos institucionais que precisar.",
+      additionalParams: "",
     },
 
     {
@@ -23,6 +25,7 @@ async function main() {
       title: "Corpo Docente",
       description:
         "Aqui você encontrará todos os membros do nosso corpo docente, além dos links para seus Currículos Lattes, onde poderão ser encontradas mais informações.",
+      additionalParams: "",
     },
 
     {
@@ -30,18 +33,28 @@ async function main() {
       title: "Contato",
       description:
         "Se você tem alguma dúvida, sugestão, ou deseja mais informações, Entre em contato.",
+      additionalParams: "",
     },
 
     {
       pathName: "/programas",
       title: "Programas de Extensão",
-      description: null,
+      description: "",
+      additionalParams: "",
     },
 
     {
       pathName: "/projetos",
       title: "Projetos de Extensão",
-      description: null,
+      description: "",
+      additionalParams: "",
+    },
+
+    {
+      pathName: "/colegiado",
+      title: "Colegiado",
+      description: "",
+      additionalParams: "",
     },
   ];
   const createPageService = container.resolve(CreatePageService);
@@ -55,6 +68,7 @@ async function main() {
             pathName: page.pathName,
             title: page.title,
             description: page.description,
+            additionalParams: page.additionalParams,
           })
           .then(() => console.log(`Página ${page.title} criada\n`))
           .catch((error) =>

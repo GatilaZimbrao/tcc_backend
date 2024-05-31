@@ -46,18 +46,19 @@ export class PrismaPageRepository implements PageRepository {
     return null;
   }
 
-  async create(page: Page): Promise<Page | null> {
+  async create(page: Page): Promise<Page> {
     const newPage = await this.prisma.page.create({
       data: {
         pathName: page.pathName,
         title: page.title,
         description: page.description,
+        additionalParams: page.additionalParams,
       },
     });
     return newPage;
   }
 
-  async update(page: Page): Promise<Page | null> {
+  async update(page: Page): Promise<Page> {
     const newPage = await this.prisma.page.update({
       where: {
         id: page.id,

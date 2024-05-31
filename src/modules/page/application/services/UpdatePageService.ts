@@ -14,7 +14,7 @@ export class UpdatePageService {
     private repository: PageRepository
   ) {}
 
-  public async execute(page: Page): Promise<Page | null> {
+  public async execute(page: Page): Promise<Page> {
     const idIsValid = await this.repository.findById(page.id);
 
     if (!idIsValid) {
@@ -32,6 +32,7 @@ export class UpdatePageService {
       pathName: page.pathName,
       title: page.title,
       description: page.description,
+      additionalParams: page.additionalParams,
     });
   }
 }

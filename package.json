@@ -8,6 +8,7 @@
     "start": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules --respawn ./src/server.ts | pino-pretty",
     "create:admin": "ts-node -T -r tsconfig-paths/register ./src/scripts/createAdminAccount.ts",
     "create:initialPages": "ts-node -T -r tsconfig-paths/register ./src/scripts/createInitialPages.ts",
+    "killPort": "npx kill-port 5000",
     "migrate": "npx prisma migrate dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

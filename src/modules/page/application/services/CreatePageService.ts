@@ -14,17 +14,19 @@ export class CreatePageService {
     private repository: PageRepository
   ) {}
 
-  public async execute(page: Page): Promise<Page | null> {
+  public async execute(page: Page): Promise<Page> {
     const pageAlreadyExists = await this.repository.findByName(page.pathName);
 
     if (pageAlreadyExists) {
       throw new PageError(PageErrorStatus.PAGE_ALREADY_EXISTS);
     }
+
     return await this.repository.create({
       id: page.id,
       pathName: page.pathName,
       title: page.title,
       description: page.description,
+      additionalParams: page.additionalParams,
     });
   }
 }
