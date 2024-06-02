@@ -3,6 +3,7 @@ import "reflect-metadata";
 import "shared/container";
 import { container } from "tsyringe";
 import { CreatePageService } from "modules/page/application/services/CreatePageService";
+import { processAdditionalParams } from "modules/page/utils/processAdditionalParams";
 
 async function main() {
   const pages = [
@@ -10,7 +11,10 @@ async function main() {
       pathName: "/",
       title: "CEFET",
       description: "",
-      additionalParams: "",
+      additionalParams: {
+        imageUrl:
+          "https://www.cefet-rj.br/attachments/article/431/uned_friburgo01.jpg",
+      },
     },
     {
       pathName: "/documentos",
@@ -54,31 +58,38 @@ async function main() {
       pathName: "/colegiado",
       title: "Colegiado",
       description: "",
-      additionalParams: "",
+      additionalParams: {
+        minutesLink:
+          "https://drive.google.com/drive/folders/0B2u-ugOQzUgEWDd1UzRaaWFMUlU?resourcekey=0-9jzVele3YMNXny7cJZ_qAQ&usp=drive_link",
+        cepeLink: "tes",
+      },
     },
   ];
   const createPageService = container.resolve(CreatePageService);
 
   await Promise.all(
-    pages.map(
-      async (page) =>
-        await createPageService
-          .execute({
-            id: 0,
-            pathName: page.pathName,
-            title: page.title,
-            description: page.description,
-            additionalParams: page.additionalParams,
-          })
-          .then(() => console.log(`Página ${page.title} criada\n`))
-          .catch((error) =>
-            console.error(
-              `\nError ao criar a página: ${page.title}:\n`,
-              error,
-              "\n"
-            )
+    pages.map(async (page) => {
+      const cleanAdditionalParams = processAdditionalParams(
+        page.additionalParams
+      );
+
+      return await createPageService
+        .execute({
+          id: 0,
+          pathName: page.pathName,
+          title: page.title,
+          description: page.description,
+          additionalParams: cleanAdditionalParams,
+        })
+        .then(() => console.log(`Página ${page.title} criada\n`))
+        .catch((error) =>
+          console.error(
+            `\nError ao criar a página: ${page.title}:\n`,
+            error,
+            "\n"
           )
-    )
+        );
+    })
   );
 
   process.exit(0);
