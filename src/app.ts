@@ -20,8 +20,9 @@ export function createApp(): Express {
 
   const allowedOrigins: string[] = [
     "http://localhost:5173",
+    "http://192.168.1.79:5173",
     "http://192.168.67.135:5173",
-  ]; //
+  ];
 
   const corsOptions: CorsOptions = {
     origin: (

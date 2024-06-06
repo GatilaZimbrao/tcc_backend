@@ -5,8 +5,9 @@ dotenv.config();
 
 const app = createApp();
 
-app.listen(process.env.PORT || 3333, () => {
-  console.log("Server online!, Listening on port " + process.env.PORT);
+const port = Number(process.env.PORT) || 3333;
+app.listen(port, "0.0.0.0", () => {
+  console.log("Server online!, Listening on port " + port);
 });
 
 const portDown = async () => {
