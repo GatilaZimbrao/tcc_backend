@@ -3,7 +3,7 @@ import "express-async-errors";
 import "shared/container";
 
 import cookieParser from "cookie-parser";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
 import helmet from "helmet";
@@ -17,12 +17,27 @@ export function createApp(): Express {
 
   app.use(cookieParser());
   app.use(express.json());
-  app.use(
-    cors({
-      credentials: true,
-      origin: true,
-    })
-  );
+
+  const allowedOrigins: string[] = [
+    "http://localhost:5173",
+    "http://192.168.67.135:5173",
+  ]; //
+
+  const corsOptions: CorsOptions = {
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void
+    ) => {
+      if (allowedOrigins.includes(origin as string) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  };
+
+  app.use(cors(corsOptions));
   app.use(helmet());
 
   app.use("/api/v1", router);
