@@ -61,7 +61,8 @@ async function main() {
       additionalParams: {
         minutesLink:
           "https://drive.google.com/drive/folders/0B2u-ugOQzUgEWDd1UzRaaWFMUlU?resourcekey=0-9jzVele3YMNXny7cJZ_qAQ&usp=drive_link",
-        cepeLink: "tes",
+        cepeLink:
+          "https://www.cefet-rj.br/arquivos_download/instituicao/cepe/outros/regulamento_cepe.pdf",
       },
     },
   ];
