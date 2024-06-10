@@ -6,11 +6,24 @@ import { PermitRole } from "@shared/middlewares/PermitRole";
 const teacherRouter = Router();
 const controller = new TeacherController();
 
-teacherRouter.use(VerifySession);
-
-teacherRouter.post("/", PermitRole(["admin"]), controller.create);
-teacherRouter.put("/:id", PermitRole(["admin"]), controller.update);
-teacherRouter.delete("/:id", PermitRole(["admin"]), controller.delete);
+teacherRouter.post(
+  "/",
+  VerifySession,
+  PermitRole(["admin"]),
+  controller.create
+);
+teacherRouter.put(
+  "/:id",
+  VerifySession,
+  PermitRole(["admin"]),
+  controller.update
+);
+teacherRouter.delete(
+  "/:id",
+  VerifySession,
+  PermitRole(["admin"]),
+  controller.delete
+);
 teacherRouter.get("/:id", controller.findById);
 teacherRouter.get("/", controller.list);
 

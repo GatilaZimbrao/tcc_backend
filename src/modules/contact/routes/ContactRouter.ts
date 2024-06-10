@@ -6,11 +6,24 @@ import { PermitRole } from "@shared/middlewares/PermitRole";
 const contactRouter = Router();
 const controller = new ContactController();
 
-contactRouter.use(VerifySession);
-
-contactRouter.post("/", PermitRole(["admin"]), controller.create);
-contactRouter.put("/:id", PermitRole(["admin"]), controller.update);
-contactRouter.delete("/:id", PermitRole(["admin"]), controller.delete);
+contactRouter.post(
+  "/",
+  VerifySession,
+  PermitRole(["admin"]),
+  controller.create
+);
+contactRouter.put(
+  "/:id",
+  VerifySession,
+  PermitRole(["admin"]),
+  controller.update
+);
+contactRouter.delete(
+  "/:id",
+  VerifySession,
+  PermitRole(["admin"]),
+  controller.delete
+);
 contactRouter.get("/:id", controller.findById);
 contactRouter.get("/", controller.list);
 

@@ -11,8 +11,6 @@ import { PermitRole } from "@shared/middlewares/PermitRole";
 const fileRouter = Router();
 const controller = new FileController();
 
-fileRouter.use(VerifySession);
-
 fileRouter.post(
   "/",
   fileUpload({ createParentPath: true }),
@@ -20,11 +18,17 @@ fileRouter.post(
   filesExtLimiter(FILE_ALLOWED_EXT),
   filesSizeLimiter,
 
+  VerifySession,
   PermitRole(["admin"]),
   controller.create
 );
 
-fileRouter.delete("/:id", PermitRole(["admin"]), controller.delete);
+fileRouter.delete(
+  "/:id",
+  VerifySession,
+  PermitRole(["admin"]),
+  controller.delete
+);
 fileRouter.get("/:id", controller.findById);
 fileRouter.get("/", controller.list);
 
