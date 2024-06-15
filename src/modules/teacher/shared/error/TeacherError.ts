@@ -5,6 +5,7 @@ export enum TeacherErrorStatus {
   TEACHER_ALREADY_EXISTS,
   TEACHER_DONT_EXISTS,
   TEACHER_TYPE_INVALID,
+  TEACHER_IMAGE_SAVE_ERROR,
 }
 
 export const errorProps: Record<TeacherErrorStatus, AppErrorProps> = {
@@ -23,13 +24,15 @@ export const errorProps: Record<TeacherErrorStatus, AppErrorProps> = {
     message: "Docente não existente",
   },
 
-
   [TeacherErrorStatus.TEACHER_TYPE_INVALID]: {
     statusCode: 400,
     message: "Tipo de docente inválido.",
   },
 
-  
+  [TeacherErrorStatus.TEACHER_IMAGE_SAVE_ERROR]: {
+    statusCode: 400,
+    message: "Ocorreu um erro ao salvar a foto do docente.",
+  },
 };
 
 export class TeacherError extends AppError {

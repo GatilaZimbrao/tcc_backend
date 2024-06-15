@@ -1,5 +1,5 @@
 import { File } from "@prisma/client";
-import { FileArray, UploadedFile } from "express-fileupload";
+import { UploadedFile } from "express-fileupload";
 import { FileRepository } from "modules/file/domain/repositories/FileRepository";
 import {
   FileError,
@@ -33,7 +33,7 @@ export class CreateFileService {
       "archives",
       uploadedFile.name
     );
-
+    
     uploadedFile.mv(filePath, (err: Error) => {
       if (err) {
         throw new FileError(FileErrorStatus.FILE_SAVE_ERROR);

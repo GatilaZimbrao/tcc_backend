@@ -20,12 +20,12 @@ export class FileController {
   async create(req: Request, res: Response): Promise<void> {
     const { name } = req.body;
 
-    let file_name = "";
-    let uploadedFile: UploadedFile | undefined;
-
     if (!name) {
       throw new FileError(FileErrorStatus.MISSING_PARAMS);
     }
+
+    let file_name = "";
+    let uploadedFile: UploadedFile | undefined;
 
     const files = req.files as FileArray;
 
@@ -36,11 +36,12 @@ export class FileController {
         file_name = uploadedFile.name;
       }
     });
-    const createService = container.resolve(CreateFileService);
 
     if (!file_name || !uploadedFile) {
       throw new FileError(FileErrorStatus.MISSING_PARAMS);
     }
+
+    const createService = container.resolve(CreateFileService);
 
     const file = await createService.execute(
       {
