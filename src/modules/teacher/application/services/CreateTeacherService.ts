@@ -25,10 +25,8 @@ export class CreateTeacherService {
       throw new TeacherError(TeacherErrorStatus.TEACHER_TYPE_INVALID);
     }
 
-    console.log("teacher.name", teacher.name);
     const teacherAlreadyExists = await this.repository.findByName(teacher.name);
 
-    console.log("teacherAlreadyExists", teacherAlreadyExists);
     if (teacherAlreadyExists) {
       throw new TeacherError(TeacherErrorStatus.TEACHER_ALREADY_EXISTS);
     }

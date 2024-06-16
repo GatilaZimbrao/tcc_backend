@@ -59,30 +59,70 @@ export class TeacherController {
       uploadedFile
     );
 
-    res.status(201).json(teacher);
+    if (teacher) {
+      const hostUrl = `${req.protocol}://${req.get("host")}/images/`;
+      const newTeacherList = {
+        ...teacher,
+        image: `${hostUrl}${teacher.image}`,
+      };
+
+      res.status(201).json(newTeacherList);
+    }
   }
 
   async update(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
-    const { name, image, education, linkLattes, type } = req.body;
+    const { name, education, linkLattes, type } = req.body;
 
-    if (!id || !name || !education || !image || !linkLattes || !type) {
+    if (!id || !name || !education || !linkLattes || !type) {
       throw new TeacherError(TeacherErrorStatus.MISSING_PARAMS);
     }
 
-    const updateService = container.resolve(UpdateTeacherService);
+    let file_name = "";
+    let uploadedFile: UploadedFile | undefined;
 
-    const teacher = await updateService.execute({
-      id: parseInt(id),
-      name: name,
-      image: image,
-      education: education,
-      linkLattes: linkLattes,
-      type: type,
+    const files = req.files as FileArray;
+
+    Object.keys(files).forEach((key) => {
+      if (!Array.isArray(files[key])) {
+        uploadedFile = files[key] as UploadedFile;
+
+        file_name = uploadedFile.name;
+      }
     });
 
-    res.status(200).json(teacher);
+    if (!file_name || !uploadedFile) {
+      throw new TeacherError(TeacherErrorStatus.MISSING_PARAMS);
+    }
+
+    const uniqueSuffix =
+      "cefet_" + Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const filename = uniqueSuffix + file_name;
+
+    const updateService = container.resolve(UpdateTeacherService);
+
+    const teacher = await updateService.execute(
+      {
+        id: parseInt(id),
+        name: name,
+        image: filename,
+        education: education,
+        linkLattes: linkLattes,
+        type: type,
+      },
+      uploadedFile
+    );
+
+    if (teacher) {
+      const hostUrl = `${req.protocol}://${req.get("host")}/images/`;
+      const newTeacherList = {
+        ...teacher,
+        image: `${hostUrl}${teacher.image}`,
+      };
+
+      res.status(200).json(newTeacherList);
+    }
   }
 
   async delete(req: Request, res: Response): Promise<void> {
@@ -99,35 +139,25 @@ export class TeacherController {
 
   async list(req: Request, res: Response): Promise<void> {
     const { term } = req.query;
-    if (term && typeof term == "string") {
+    const hostUrl = `${req.protocol}://${req.get("host")}/images/`;
+
+    const resolveTeacherImages = (teachers: any[]) =>
+      teachers.map((teacher) => ({
+        ...teacher,
+        image: `${hostUrl}${teacher.image}`,
+      }));
+
+    let teacherList;
+    if (term && typeof term === "string") {
       const searchService = container.resolve(SearchTeacherService);
-      const teacherList = await searchService.execute(term);
-
-      const newTeacherList = teacherList?.map((teacher) => {
-        const imageUrl = `${req.protocol}://${req.get("host")}/images/${
-          teacher.image
-        }`;
-
-        return {
-          ...teacher,
-          image: imageUrl,
-        };
-      });
-      res.status(200).json(newTeacherList);
+      teacherList = await searchService.execute(term);
     } else {
       const listService = container.resolve(ListTeacherService);
-      const teacherList = await listService.execute();
+      teacherList = await listService.execute();
+    }
 
-      const newTeacherList = teacherList?.map((teacher) => {
-        const imageUrl = `${req.protocol}://${req.get("host")}/images/${
-          teacher.image
-        }`;
-
-        return {
-          ...teacher,
-          image: imageUrl,
-        };
-      });
+    if (teacherList) {
+      const newTeacherList = resolveTeacherImages(teacherList);
       res.status(200).json(newTeacherList);
     }
   }
@@ -139,9 +169,16 @@ export class TeacherController {
     }
     const findByIdTeacherService = container.resolve(FindByIdTeacherService);
     const teacher = await findByIdTeacherService.execute(Number(id));
+
     if (!teacher) {
       throw new TeacherError(TeacherErrorStatus.TEACHER_DONT_EXISTS);
     }
-    res.status(200).json(teacher);
+
+    const hostUrl = `${req.protocol}://${req.get("host")}/images/`;
+    const newTeacherList = {
+      ...teacher,
+      image: `${hostUrl}${teacher.image}`,
+    };
+    res.status(200).json(newTeacherList);
   }
 }

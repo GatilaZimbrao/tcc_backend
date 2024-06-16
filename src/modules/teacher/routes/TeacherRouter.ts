@@ -25,6 +25,12 @@ teacherRouter.post(
 );
 teacherRouter.put(
   "/:id",
+
+  fileUpload({ createParentPath: true }),
+  filesPayloadExists,
+  filesExtLimiter(IMAGE_ALLOWED_EXT),
+  filesSizeLimiter,
+
   VerifySession,
   PermitRole(["admin"]),
   controller.update
