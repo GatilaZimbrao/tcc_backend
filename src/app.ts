@@ -9,6 +9,7 @@ import express, { Express } from "express";
 import helmet from "helmet";
 import { router } from "shared/routes";
 import { handleError } from "@shared/middlewares/HandleError";
+import path from "path";
 
 dotenv.config();
 
@@ -46,6 +47,8 @@ export function createApp(): Express {
   app.get("/", (req, res) => {
     res.send("Server online! :D");
   });
+
+  app.use("/images", express.static(path.join(__dirname, "./images")));
 
   app.get("*", function (_, res) {
     res.status(404).send("Not found");
