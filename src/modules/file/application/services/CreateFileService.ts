@@ -20,20 +20,17 @@ export class CreateFileService {
     file: File,
     uploadedFile: UploadedFile
   ): Promise<File | null> {
-    const fileAlreadyExists = await this.repository.findByName(file.file_name);
+    const fileAlreadyExists = await this.repository.findByName(file.name);
 
     if (fileAlreadyExists) {
       throw new FileError(FileErrorStatus.FILE_ALREADY_EXISTS);
     }
 
-    const filePath = path.join(
-      __dirname,
-      "../",
-      "../",
-      "archives",
-      uploadedFile.name
-    );
-    
+    const uniqueSuffix = "cefet-" + Date.now() + "-";
+    const filename = uniqueSuffix + file.file_name;
+
+    const filePath = path.join(__dirname, "../", "../", "archives", filename);
+
     uploadedFile.mv(filePath, (err: Error) => {
       if (err) {
         throw new FileError(FileErrorStatus.FILE_SAVE_ERROR);
@@ -43,7 +40,7 @@ export class CreateFileService {
     return await this.repository.create({
       id: file.id,
       name: file.name,
-      file_name: file.file_name,
+      file_name: filename,
     });
   }
 }

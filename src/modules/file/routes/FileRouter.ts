@@ -23,6 +23,18 @@ fileRouter.post(
   controller.create
 );
 
+fileRouter.put(
+  "/:id",
+  fileUpload({ createParentPath: true }),
+  filesPayloadExists,
+  filesExtLimiter(FILE_ALLOWED_EXT),
+  filesSizeLimiter,
+
+  VerifySession,
+  PermitRole(["admin"]),
+  controller.update
+);
+
 fileRouter.delete(
   "/:id",
   VerifySession,

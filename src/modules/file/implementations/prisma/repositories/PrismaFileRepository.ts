@@ -66,4 +66,14 @@ export class PrismaFileRepository implements FileRepository {
     });
     return newFile;
   }
+
+  async update(file: File): Promise<File | null> {
+    const newFile = await this.prisma.file.update({
+      where: {
+        id: file.id,
+      },
+      data: file,
+    });
+    return newFile;
+  }
 }

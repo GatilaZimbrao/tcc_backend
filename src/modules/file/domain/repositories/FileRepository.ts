@@ -7,4 +7,5 @@ export interface FileRepository {
   findByName(name: string): Promise<File | null>;
   delete(id: number): Promise<null>;
   create(file: File): Promise<File | null>;
+  update(file: File): Promise<File | null>;
 }
