@@ -38,41 +38,54 @@ export class UpdateTeacherService {
       throw new TeacherError(TeacherErrorStatus.TEACHER_ALREADY_EXISTS);
     }
 
-    const filePath = path.join(
-      __dirname,
-      "../",
-      "../",
-      "../",
-      "../",
-      "images",
-      idIsValid.image
-    );
+    let filename = teacher.image;
 
-    if (existsSync(filePath)) {
-      unlinkSync(filePath);
+    const url = teacher.image;
+    const match = url.match(/\/images\/(.*)$/);
+
+    if (match) {
+      filename = match[1];
     }
 
-    const newFilePath = path.join(
-      __dirname,
-      "../",
-      "../",
-      "../",
-      "../",
-      "images",
-      teacher.image
-    );
+    if (idIsValid.image != teacher.image) {
+      const filePath = path.join(
+        __dirname,
+        "../",
+        "../",
+        "../",
+        "../",
+        "images",
+        idIsValid.image
+      );
 
-    uploadedFile.mv(newFilePath, (err: Error) => {
-      if (err) {
-        throw new TeacherError(TeacherErrorStatus.TEACHER_IMAGE_SAVE_ERROR);
+      if (existsSync(filePath)) {
+        unlinkSync(filePath);
       }
-    });
+
+      const uniqueSuffix = "cefet_" + Date.now() + "-";
+      filename = uniqueSuffix + teacher.image;
+      const newFilePath = path.join(
+        __dirname,
+        "../",
+        "../",
+        "../",
+        "../",
+        "images",
+        filename
+      );
+
+      uploadedFile.mv(newFilePath, (err: Error) => {
+        if (err) {
+          throw new TeacherError(TeacherErrorStatus.TEACHER_IMAGE_SAVE_ERROR);
+        }
+      });
+    }
 
     return await this.repository.update({
       id: teacher.id,
       name: teacher.name,
       education: teacher.education,
-      image: teacher.image,
+      image: filename,
       linkLattes: teacher.linkLattes,
       type: teacher.type,
     });

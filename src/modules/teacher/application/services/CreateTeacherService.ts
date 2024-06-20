@@ -31,6 +31,9 @@ export class CreateTeacherService {
       throw new TeacherError(TeacherErrorStatus.TEACHER_ALREADY_EXISTS);
     }
 
+    const uniqueSuffix = "cefet_" + Date.now() + "-";
+    const filename = uniqueSuffix + teacher.image;
+
     const filePath = path.join(
       __dirname,
       "../",
@@ -38,7 +41,7 @@ export class CreateTeacherService {
       "../",
       "../",
       "images",
-      teacher.image
+      filename
     );
 
     uploadedFile.mv(filePath, (err: Error) => {
@@ -51,7 +54,7 @@ export class CreateTeacherService {
       id: teacher.id,
       name: teacher.name,
       education: teacher.education,
-      image: teacher.image,
+      image: filename,
       linkLattes: teacher.linkLattes,
       type: teacher.type,
     });

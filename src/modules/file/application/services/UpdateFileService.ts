@@ -36,9 +36,6 @@ export class UpdateFileService {
     let filename = idIsValid.file_name;
 
     if (idIsValid.file_name != file.file_name) {
-      const uniqueSuffix = "cefet-" + Date.now() + "-";
-      filename = uniqueSuffix + file.file_name;
-
       const filePath = path.join(
         __dirname,
         "../",
@@ -50,6 +47,9 @@ export class UpdateFileService {
       if (existsSync(filePath)) {
         unlinkSync(filePath);
       }
+
+      const uniqueSuffix = "cefet-" + Date.now() + "-";
+      filename = uniqueSuffix + file.file_name;
 
       const newFilePath = path.join(
         __dirname,

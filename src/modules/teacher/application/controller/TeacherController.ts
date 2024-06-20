@@ -41,17 +41,13 @@ export class TeacherController {
       throw new TeacherError(TeacherErrorStatus.MISSING_PARAMS);
     }
 
-    const uniqueSuffix =
-      "cefet_" + Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const filename = uniqueSuffix + file_name;
-
     const createService = container.resolve(CreateTeacherService);
 
     const teacher = await createService.execute(
       {
         id: 0,
         name: name,
-        image: filename,
+        image: file_name,
         education: education,
         linkLattes: linkLattes,
         type: type,
@@ -96,17 +92,13 @@ export class TeacherController {
       throw new TeacherError(TeacherErrorStatus.MISSING_PARAMS);
     }
 
-    const uniqueSuffix =
-      "cefet_" + Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const filename = uniqueSuffix + file_name;
-
     const updateService = container.resolve(UpdateTeacherService);
 
     const teacher = await updateService.execute(
       {
         id: parseInt(id),
         name: name,
-        image: filename,
+        image: file_name,
         education: education,
         linkLattes: linkLattes,
         type: type,
